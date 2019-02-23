@@ -136,7 +136,7 @@ echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Files that may contain credentials ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Searching specific files that may contains credentias. The password could be in clear text, Base64 or cPassword (use gpp-decrypt)
 cd ..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..
-dir /s/b /A -D sysprep.inf == sysprep.xml == unattend.xml == unattended.xml == *vnc* == groups.xml == services.xml == scheduledtasks.xml == printers.xml == drives.xml == datasources.xml == php.ini == https.conf == https-xampp.conf == httpd.conf == my.ini == my.cnf == access.log == error.log == server.xml == SiteList.xml 2>nul
+dir /s/b /A -D sysprep.inf == sysprep.xml == unattend.xml == unattended.xml == *vnc* == groups.xml == services.xml == scheduledtasks.xml == printers.xml == drives.xml == datasources.xml == php.ini == https.conf == https-xampp.conf == httpd.conf == my.ini == my.cnf == access.log == error.log == server.xml == SiteList.xml == ConsoleHost_history.txt 2>nul
 cd inetpub 2>nul && (dir /s/b web.config == *.log & cd ..)
 reg query HKCU\Software\ORL\WinVNC3\Password 2>nul
 reg query "HKLM\SYSTEM\Microsoft\Windows NT\Currentversion\WinLogon" 2>nul
