@@ -102,7 +102,7 @@ echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] SERVICE BINARY PERMISSIONS WITH WMIC + ICACLS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Search for (W) or (F) inside a group where you belong to. By default only the path and first group is printed in console.
 for /f "tokens=2 delims='='" %%a in ('wmic service list full ^| findstr /i "pathname" ^|findstr /i /v "system32"') do echo %%a >> %temp%\perm.txt
-for /f eol^=^"^ delims^=^" %%a in (%temp%\perm.txt) do cmd.exe /c icacls "%%a" 2>nul | findstr "(F) (M) :\" | findstr ":\ everyone authenticated users todos usuarios %username%"
+for /f eol^=^"^ delims^=^" %%a in (%temp%\perm.txt) do cmd.exe /c icacls "%%a" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos usuarios %username%"
 del %temp%\perm.txt
 
 echo.
@@ -119,8 +119,8 @@ echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] INTERESTING WRITABLE FILES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Maybe you can take advantage of modifying/creating some binary in some of the following locations
 echo [i] Search for (W) or (F) inside a group where you belong to. By default only the path and first group is printed in console.
-icacls "C:\Program Files\*" 2>nul | findstr "(F) (M) :\" | findstr ":\ everyone authenticated users todos %username%"
-icacls "C:\Program Files (x86)\*" 2>nul | findstr "(F) (M) :\" | findstr ":\ everyone authenticated users todos %username%"
+icacls "C:\Program Files\*" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\Program Files (x86)\*" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos %username%"
 
 
 echo.
@@ -146,7 +146,7 @@ reg query "HKCU\Software\SimonTatham\PuTTY\Sessions" /s 2>nul
 
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES THAT CONTAINS THE WORD PASSWORD WITH EXTENSION: .xml .ini .txt ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-findstr /S/N/M /D:C:\ /si password *.xml *.ini *.txt 2>nul | findstr /v/i "\\AppData\\Local \\WinSxS ApnDatabase.xml \\UEV\\InboxTemplates \\Microsoft.Windows.Cloud \\Notepad\+\+\\ vmware cortana alphabet \\7-zip\\" 2>nul
+findstr /S/N/M /D:C:\ /si password *.xml *.ini *.txt 2>nul | findstr /v /i "\\AppData\\Local \\WinSxS ApnDatabase.xml \\UEV\\InboxTemplates \\Microsoft.Windows.Cloud \\Notepad\+\+\\ vmware cortana alphabet \\7-zip\\" 2>nul
 
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES WHOSE NAME CONTAINS THE WORD PASS CRED or .config not inside \Windows\ ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
