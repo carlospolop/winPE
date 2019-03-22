@@ -14,6 +14,12 @@ date /T
 time /T
 
 echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] UAC? ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo [i] If the results read ENABLELUA REG_DWORD 0x1, part or all of the UAC components are on
+REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA
+
+
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] MOUNTED DISKS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Maybe you find something interesting
 (wmic logicaldisk get caption 2>nul | more) || (fsutil fsinfo drives 2>nul)
@@ -24,8 +30,13 @@ echo [i] Interesting information?"
 set
 
 echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Registered Anti-Virus(AV) ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
+
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] INSTALLED SOFTWARE ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Some weird software? Check for vulnerabilities in unknow software installed
+wmic product get name
 dir /b "C:\Program Files" "C:\Program Files (x86)" | sort
 reg query HKEY_LOCAL_MACHINE\SOFTWARE
 
@@ -60,6 +71,44 @@ reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
 
 
 echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] NETWORK ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CURRENT SHARES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+net share
+
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] INTERFACES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+ipconfig  /all
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] USED PORTS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+netstat -ano
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FIREWALL ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+Netsh Advfirewall show allprofiles
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ARP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+arp -A
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ROUTES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+route print
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] HOSTS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+type C:\WINDOWS\System32\drivers\etc\hosts
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CACHE DNS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+ipconfig /displaydns | findstr "Record" | findstr "Name Host"
+
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] WIFI ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo [i] To get clear-text password use: netsh wlan show profile <SSID> key=clear
+netsh wlan show profile
+
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^>[*] BASIC USER INFO ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check if you are inside the Administrators froup or if you have enabled any token that can be use to escalate privileges like SeImpersonatePrivilege, SeAssignPrimaryPrivilege, SeTcbPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeCreateTokenPrivilege, SeLoadDriverPrivilege, SeTakeOwnershipPrivilege, SeDebbugPrivilege
 echo [I] ME
@@ -75,7 +124,11 @@ net localgroup
 echo.
 echo [I] ADMINISTRATORS GROUP
 net localgroup Administrators 2>nul
-net localgroup Administradores 2>nul 
+net localgroup Administradores 2>nul
+echo. 
+echo [I] Current logged users
+quser
+echo.
 
 
 echo.
@@ -151,8 +204,3 @@ findstr /S/N/M /D:C:\ /si password *.xml *.ini *.txt 2>nul | findstr /v /i "\\Ap
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES WHOSE NAME CONTAINS THE WORD PASS CRED or .config not inside \Windows\ ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 dir /s /b *pass* == *cred* == *.config* 2>nul | findstr /v /i "\\windows\\"
-
-
-
-
-
