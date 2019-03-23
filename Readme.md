@@ -18,3 +18,9 @@ This batch script checks:
 - [x] Services Binaries Weak Permissions
 - [x] Services Registry Weak Permissions
 - [x] Unquoted Service Paths
+
+The script will use acceschk.exe if it is available (with that name). But it is not necessary, it also uses wmic + icacls.
+
+##Binaries
+
+Some interesting precompiled binaries for privesc in Windows.
