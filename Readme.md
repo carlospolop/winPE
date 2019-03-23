@@ -21,6 +21,8 @@ This batch script checks:
 
 The script will use acceschk.exe if it is available (with that name). But it is not necessary, it also uses wmic + icacls.
 
-##Binaries
+## Binaries
 
 Some interesting precompiled binaries for privesc in Windows.
+
+By Polop(TM)
