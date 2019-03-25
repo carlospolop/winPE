@@ -6,45 +6,95 @@ echo [i] Check for vulnerabilities for the OS version with the applied patches
 systeminfo
 echo.
 wmic qfe get Caption,Description,HotFixID,InstalledOn | more
-
+echo.
+echo.
+echo [i] Possible exploits (https://github.com/codingo/OSCP-2/blob/master/Windows/WinPrivCheck.bat)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB2592799" | find /i "KB2592799" 1>NUL
+IF errorlevel 1 echo MS11-080 patch is NOT installed! (Vulns: XP/SP3,2K3/SP3-afd.sys)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB3143141" | find /i "KB3143141" 1>NUL
+IF errorlevel 1 echo MS16-032 patch is NOT installed! (Vulns: 2K8/SP1/2,Vista/SP2,7/SP1-secondary logon)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB2393802" | find /i "KB2393802" 1>NUL
+IF errorlevel 1 echo MS11-011 patch is NOT installed! (Vulns: XP/SP2/3,2K3/SP2,2K8/SP2,Vista/SP1/2,7/SP0-WmiTraceMessageVa)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB982799" | find /i "KB982799" 1>NUL
+IF errorlevel 1 echo MS10-59 patch is NOT installed! (Vulns: 2K8,Vista,7/SP0-Chimichurri)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB979683" | find /i "KB979683" 1>NUL
+IF errorlevel 1 echo MS10-21 patch is NOT installed! (Vulns: 2K/SP4,XP/SP2/3,2K3/SP2,2K8/SP2,Vista/SP0/1/2,7/SP0-Win Kernel)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB2305420" | find /i "KB2305420" 1>NUL
+IF errorlevel 1 echo MS10-092 patch is NOT installed! (Vulns: 2K8/SP0/1/2,Vista/SP1/2,7/SP0-Task Sched)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB981957" | find /i "KB981957" 1>NUL
+IF errorlevel 1 echo MS10-073 patch is NOT installed! (Vulns: XP/SP2/3,2K3/SP2/2K8/SP2,Vista/SP1/2,7/SP0-Keyboard Layout)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB4013081" | find /i "KB4013081" 1>NUL
+IF errorlevel 1 echo MS17-017 patch is NOT installed! (Vulns: 2K8/SP2,Vista/SP2,7/SP1-Registry Hive Loading)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB977165" | find /i "KB977165" 1>NUL
+IF errorlevel 1 echo MS10-015 patch is NOT installed! (Vulns: 2K,XP,2K3,2K8,Vista,7-User Mode to Ring)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB941693" | find /i "KB941693" 1>NUL
+IF errorlevel 1 echo MS08-025 patch is NOT installed! (Vulns: 2K/SP4,XP/SP2,2K3/SP1/2,2K8/SP0,Vista/SP0/1-win32k.sys)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB920958" | find /i "KB920958" 1>NUL
+IF errorlevel 1 echo MS06-049 patch is NOT installed! (Vulns: 2K/SP4-ZwQuerySysInfo)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB914389" | find /i "KB914389" 1>NUL
+IF errorlevel 1 echo MS06-030 patch is NOT installed! (Vulns: 2K,XP/SP2-Mrxsmb.sys)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB908523" | find /i "KB908523" 1>NUL
+IF errorlevel 1 echo MS05-055 patch is NOT installed! (Vulns: 2K/SP4-APC Data-Free)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB890859" | find /i "KB890859" 1>NUL
+IF errorlevel 1 echo MS05-018 patch is NOT installed! (Vulns: 2K/SP3/4,XP/SP1/2-CSRSS)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB842526" | find /i "KB842526" 1>NUL
+IF errorlevel 1 echo MS04-019 patch is NOT installed! (Vulns: 2K/SP2/3/4-Utility Manager)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB835732" | find /i "KB835732" 1>NUL
+IF errorlevel 1 echo MS04-011 patch is NOT installed! (Vulns: 2K/SP2/3/4,XP/SP0/1-LSASS service BoF)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB841872" | find /i "KB841872" 1>NUL
+IF errorlevel 1 echo MS04-020 patch is NOT installed! (Vulns: 2K/SP4-POSIX)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB2975684" | find /i "KB2975684" 1>NUL
+IF errorlevel 1 echo MS14-040 patch is NOT installed! (Vulns: 2K3/SP2,2K8/SP2,Vista/SP2,7/SP1-afd.sys Dangling Pointer)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB3136041" | find /i "KB3136041" 1>NUL
+IF errorlevel 1 echo MS16-016 patch is NOT installed! (Vulns: 2K8/SP1/2,Vista/SP2,7/SP1-WebDAV to Address)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB3057191" | find /i "KB3057191" 1>NUL
+IF errorlevel 1 echo MS15-051 patch is NOT installed! (Vulns: 2K3/SP2,2K8/SP2,Vista/SP2,7/SP1-win32k.sys)
+wmic qfe get Caption,Description,HotFixID,InstalledOn | findstr /C:"KB2989935" | find /i "KB2989935" 1>NUL
+IF errorlevel 1 echo MS14-070 patch is NOT installed! (Vulns: 2K3/SP2-TCP/IP)
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] DATE and TIME ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] You may need to adjust your local date/time to exploit some vulnerability
 date /T
 time /T
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] UAC? ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] If the results read ENABLELUA REG_DWORD 0x1, part or all of the UAC components are on
 REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA
-
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] MOUNTED DISKS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Maybe you find something interesting
 (wmic logicaldisk get caption 2>nul | more) || (fsutil fsinfo drives 2>nul)
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ENVIRONMENT ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Interesting information?"
 set
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Registered Anti-Virus(AV) ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] INSTALLED SOFTWARE ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Some weird software? Check for vulnerabilities in unknow software installed
 wmic product get name
 dir /b "C:\Program Files" "C:\Program Files (x86)" | sort
 reg query HKEY_LOCAL_MACHINE\SOFTWARE
-
+IF exist C:\Windows\CCM\SCClient.exe echo SCCM is installed (installers are run with SYSTEM privileges, many are vulnerable to DLL Sideloading)
+echo.
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] WSUS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo [i] You can inject 'fake' updates into non-SSL WSUS traffic (WSUXploit)
+reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate\ | find /i "wuserver" | find /i "http://"
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] RUNNING PROCESSES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Something unexpected is running? Check for vulnerabilities
 tasklist /SVC
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] RUN AT STARTUP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check if you can modify any binary that is going to be executed by admin or if you can impersonate a not found binary
@@ -62,64 +112,65 @@ dir /b "%programdata%\Microsoft\Windows\Start Menu\Programs\Startup" 2>nul & ^
 echo Looking inside "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup" & ^
 dir /b "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup" 2>nul & ^
 schtasks /query /fo TABLE /nh | findstr /v /i "disable deshab informa")
-	
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] AlwaysInstallElevated? ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] If '1' then you can install a .msi file with admin privileges ;)
 reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated 2> nul
 reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated 2> nul
-
-
+echo.
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] NETWORK ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CURRENT SHARES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 net share
-
+echo.
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] INTERFACES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 ipconfig  /all
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] USED PORTS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 netstat -ano
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FIREWALL ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 Netsh Advfirewall show allprofiles
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ARP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 arp -A
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ROUTES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 route print
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] HOSTS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 type C:\WINDOWS\System32\drivers\etc\hosts
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CACHE DNS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 ipconfig /displaydns | findstr "Record" | findstr "Name Host"
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] WIFI ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] To get clear-text password use: netsh wlan show profile <SSID> key=clear
 netsh wlan show profile
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^>[*] BASIC USER INFO ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check if you are inside the Administrators froup or if you have enabled any token that can be use to escalate privileges like SeImpersonatePrivilege, SeAssignPrimaryPrivilege, SeTcbPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeCreateTokenPrivilege, SeLoadDriverPrivilege, SeTakeOwnershipPrivilege, SeDebbugPrivilege
-echo [I] ME
-
-net users %username%
+echo [i] ME
+net user %username%
+net user %USERNAME% /domain
 whoami /all
 echo.
-echo [I] USERS
-net users
+echo [i] USERS
+net user
 echo.
-echo [I] GROUPS
+echo [i] GROUPS
 net localgroup
 echo.
 echo [I] ADMINISTRATORS GROUP
@@ -129,10 +180,10 @@ echo.
 echo [I] Current logged users
 quser
 echo.
-
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] SERVICES VULNERABILITIES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] SERVICE PERMISSIONS WITH accesschk.exe FOR 'Authenticated users', Everyone, BUILTIN\Users, Todos and CURRENT USER ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] If Authenticated Users have SERVICE_ALL_ACCESS or SERVICE_CHANGE_CONFIG or WRITE_DAC or WRITE_OWNER or GENERIC_WRITE or GENERIC_ALL, you can modify the binary that is going to be executed by the service and start/stop the service
 echo [i] If accesschk.exe is not in PATH, nothing will be found here
@@ -157,25 +208,25 @@ echo [i] Search for (W) or (F) inside a group where you belong to. By default on
 for /f "tokens=2 delims='='" %%a in ('wmic service list full ^| findstr /i "pathname" ^|findstr /i /v "system32"') do echo %%a >> %temp%\perm.txt
 for /f eol^=^"^ delims^=^" %%a in (%temp%\perm.txt) do cmd.exe /c icacls "%%a" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos usuarios %username%"
 del %temp%\perm.txt
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CHECK IF YOU CAN MODIFY ANY SERVICE REGISTRYS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 for /f %%a in ('reg query hklm\system\currentcontrolset\services') do del %temp%\reg.hiv 2>nul & reg save %%a %temp%\reg.hiv 2>nul && reg restore %a %temp%\reg.hiv 2>nul && echo You can modify %%a
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] UNQUOTED SERVICE PATHS" ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] When the path is not quoted (ex: C:\Program files\soft\new folder\exec.exe) Windows will try to execute first 'C:\Progam.exe', then 'C:\Program Files\soft\new.exe' and finally 'C:\Program Files\soft\new folder\exec.exe'. Try to create 'C:\Program Files\soft\new.exe'
 wmic service get name,displayname,pathname,startmode | more | findstr /i /v "C:\\Windows\\system32\\" | findstr /i /v """
-
-
+echo.
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] INTERESTING WRITABLE FILES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Maybe you can take advantage of modifying/creating some binary in some of the following locations
 echo [i] Search for (W) or (F) inside a group where you belong to. By default only the path and first group is printed in console.
 icacls "C:\Program Files\*" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos %username%"
 icacls "C:\Program Files (x86)\*" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos %username%"
-
-
+echo.
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] CREDENTIALS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] SAVED CREDENTIALS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -184,23 +235,25 @@ echo Looking inside %appdata%\Microsoft\Credentials\
 dir /b %appdata%\Microsoft\Credentials\ 2>nul 
 echo Looking inside %localappdata%\Microsoft\Credentials\
 dir /b %localappdata%\Microsoft\Credentials\ 2>nul
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Files that may contain credentials ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Searching specific files that may contains credentias. The password could be in clear text, Base64 or cPassword (use gpp-decrypt)
 cd ..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..
-dir /s/b /A -D sysprep.inf == sysprep.xml == unattend.xml == unattended.xml == *vnc* == groups.xml == services.xml == scheduledtasks.xml == printers.xml == drives.xml == datasources.xml == php.ini == https.conf == https-xampp.conf == httpd.conf == my.ini == my.cnf == access.log == error.log == server.xml == SiteList.xml == ConsoleHost_history.txt 2>nul
+dir /s/b /A -D sysprep.inf == sysprep.xml == unattend.xml == unattended.xml == *vnc* == groups.xml == services.xml == scheduledtasks.xml == printers.xml == drives.xml == datasources.xml == php.ini == https.conf == https-xampp.conf == httpd.conf == my.ini == my.cnf == access.log == error.log == server.xml == SiteList.xml == ConsoleHost_history.txt == setupinfo == setupinfo.bak 2>nul
 cd inetpub 2>nul && (dir /s/b web.config == *.log & cd ..)
 reg query HKCU\Software\ORL\WinVNC3\Password 2>nul
-reg query "HKLM\SYSTEM\Microsoft\Windows NT\Currentversion\WinLogon" 2>nul
-reg query "HKLM\SYSTEM\CurrentControlSet\Services\SNMP" /s 2>nul
-reg query "HKCU\Software\TightVNC\Server" 2>nul
-reg query "HKCU\Software\SimonTatham\PuTTY\Sessions" /s 2>nul
-
+reg query HKEY_LOCAL_MACHINE\SOFTWARE\RealVNC\WinVNC4 /v password 2>NUL
+reg query HKEY_LOCAL_MACHINE\SOFTWARE\RealVNC\WinVNC4 /v password 2>NUL
+reg query HKLM\SYSTEM\Microsoft\Windows NT\Currentversion\WinLogon 2>nul
+reg query HKLM\SYSTEM\CurrentControlSet\Services\SNMP /s 2>nul
+reg query HKCU\Software\TightVNC\Server 2>nul
+reg query HKCU\Software\SimonTatham\PuTTY\Sessions /s 2>nul
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES THAT CONTAINS THE WORD PASSWORD WITH EXTENSION: .xml .ini .txt ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 findstr /S/N/M /D:C:\ /si password *.xml *.ini *.txt 2>nul | findstr /v /i "\\AppData\\Local \\WinSxS ApnDatabase.xml \\UEV\\InboxTemplates \\Microsoft.Windows.Cloud \\Notepad\+\+\\ vmware cortana alphabet \\7-zip\\" 2>nul
-
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES WHOSE NAME CONTAINS THE WORD PASS CRED or .config not inside \Windows\ ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 dir /s /b *pass* == *cred* == *.config* 2>nul | findstr /v /i "\\windows\\"
