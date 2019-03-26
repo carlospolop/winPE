@@ -1,5 +1,7 @@
 @echo off
 
+set long=no
+
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] BASIC SYSTEM INFO ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] WINDOWS OS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check for vulnerabilities for the OS version with the applied patches
@@ -64,6 +66,10 @@ echo [i] If the results read ENABLELUA REG_DWORD 0x1, part or all of the UAC com
 REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA
 echo.
 echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Registered Anti-Virus(AV) ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
+echo.
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] MOUNTED DISKS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Maybe you find something interesting
 (wmic logicaldisk get caption 2>nul | more) || (fsutil fsinfo drives 2>nul)
@@ -72,10 +78,6 @@ echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ENVIRONMENT ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Interesting information?"
 set
-echo.
-echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Registered Anti-Virus(AV) ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] INSTALLED SOFTWARE ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -95,6 +97,20 @@ echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] RUNNING PROCESSES ^<_-_-_-_-_-_-_-_-_-
 echo [i] Something unexpected is running? Check for vulnerabilities
 tasklist /SVC
 echo.
+echo REVISAR AQUIIII Y BORRAMEE
+echo [i] Checking file permissions of running processes (File backdooring - maybe the same files start automatically when Administrator logs in)
+for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v "system32"^|find ":"') do (
+	for /f eol^=^"^ delims^=^" %%z in ('echo %%x') do (
+		cmd.exe /c icacls "%%z" ^| findstr /i "(F) (M) (W) :\" ^| findstr /i ":\ everyone authenticated users todos %username%"
+	)
+)
+echo.
+echo [i] Checking directory permissions of running processes (DLL injection)
+for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v "system32"^|find ":"') do for /f eol^=^"^ delims^=^" %%y in ('echo %%x') do (
+	set tpath=%%~dpy
+	cmd.exe /c icacls "!tpath:~,-1!" ^| findstr /i "(F) (M) (W) :\" ^| findstr /i ":\ everyone authenticated users todos %username%"
+)
+echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] RUN AT STARTUP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check if you can modify any binary that is going to be executed by admin or if you can impersonate a not found binary
@@ -103,14 +119,14 @@ reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run 2>nul & ^
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce 2>nul & ^
 reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run 2>nul & ^
 reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce 2>nul & ^
-echo Looking inside "C:\Documents and Settings\All Users\Start Menu\Programs\Startup" & ^
-dir /b "C:\Documents and Settings\All Users\Start Menu\Programs\Startup" 2>nul & ^
-echo Looking inside "C:\Documents and Settings\%username%\Start Menu\Programs\Startup" & ^
-dir /b "C:\Documents and Settings\%username%\Start Menu\Programs\Startup" 2>nul & ^
-echo Looking inside "%programdata%\Microsoft\Windows\Start Menu\Programs\Startup" & ^
-dir /b "%programdata%\Microsoft\Windows\Start Menu\Programs\Startup" 2>nul & ^
-echo Looking inside "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup" & ^
-dir /b "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup" 2>nul & ^
+icacls "C:\Documents and Settings\All Users\Start Menu\Programs\Startup" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "C:\Documents and Settings\All Users\Start Menu\Programs\Startup\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "C:\Documents and Settings\%username%\Start Menu\Programs\Startup" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "C:\Documents and Settings\%username%\Start Menu\Programs\Startup\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "%programdata%\Microsoft\Windows\Start Menu\Programs\Startup" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "%programdata%\Microsoft\Windows\Start Menu\Programs\Startup\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
+icacls "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" & ^
 schtasks /query /fo TABLE /nh | findstr /v /i "disable deshab informa")
 echo.
 echo.
@@ -160,24 +176,30 @@ echo [i] To get clear-text password use: netsh wlan show profile <SSID> key=clea
 netsh wlan show profile
 echo.
 echo.
+echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^>[*] BASIC USER INFO ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check if you are inside the Administrators froup or if you have enabled any token that can be use to escalate privileges like SeImpersonatePrivilege, SeAssignPrimaryPrivilege, SeTcbPrivilege, SeBackupPrivilege, SeRestorePrivilege, SeCreateTokenPrivilege, SeLoadDriverPrivilege, SeTakeOwnershipPrivilege, SeDebbugPrivilege
-echo [i] ME
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CURRENT USER ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 net user %username%
 net user %USERNAME% /domain
 whoami /all
 echo.
-echo [i] USERS
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] USERS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 net user
 echo.
-echo [i] GROUPS
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] GROUPS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 net localgroup
 echo.
-echo [I] ADMINISTRATORS GROUP
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ADMINISTRATORS GROUPS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 net localgroup Administrators 2>nul
 net localgroup Administradores 2>nul
 echo. 
-echo [I] Current logged users
+echo.
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CURRENT LOGGED USERS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 quser
 echo.
 echo.
@@ -210,21 +232,47 @@ for /f eol^=^"^ delims^=^" %%a in (%temp%\perm.txt) do cmd.exe /c icacls "%%a" 2
 del %temp%\perm.txt
 echo.
 echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CHECK IF YOU CAN MODIFY ANY SERVICE REGISTRYS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CHECK IF YOU CAN MODIFY ANY SERVICE REGISTRY ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 for /f %%a in ('reg query hklm\system\currentcontrolset\services') do del %temp%\reg.hiv 2>nul & reg save %%a %temp%\reg.hiv 2>nul && reg restore %a %temp%\reg.hiv 2>nul && echo You can modify %%a
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] UNQUOTED SERVICE PATHS" ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] When the path is not quoted (ex: C:\Program files\soft\new folder\exec.exe) Windows will try to execute first 'C:\Progam.exe', then 'C:\Program Files\soft\new.exe' and finally 'C:\Program Files\soft\new folder\exec.exe'. Try to create 'C:\Program Files\soft\new.exe'
+
+echo REVISAR ESTO
+
 wmic service get name,displayname,pathname,startmode | more | findstr /i /v "C:\\Windows\\system32\\" | findstr /i /v """
+
+
+for /f "tokens=2" %%n in ('sc query state^= all^| findstr SERVICE_NAME') do (
+	for /f "delims=: tokens=1*" %%r in ('sc qc "%%~n" ^| findstr BINARY_PATH_NAME') do echo %%~s
+)
+
+
+echo Services with space in path and not enclosed with quotes - if you have permissions run executable from different directory - exploit/windows/local/trusted_service_path:
+for /f "tokens=2" %%n in ('sc query state^= all^| findstr SERVICE_NAME') do (
+	for /f "delims=: tokens=1*" %%r in ('sc qc "%%~n" ^| findstr BINARY_PATH_NAME ^| findstr /i /v /l /c:"c:\windows" ^| findstr /v /c:""""') do (
+		echo %%~s | findstr /r /c:"^ .* .* .*$" >nul 2>&1 && (echo %%~s)
+	)
+)
 echo.
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [*] INTERESTING WRITABLE FILES ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Maybe you can take advantage of modifying/creating some binary in some of the following locations
 echo [i] Search for (W) or (F) inside a group where you belong to. By default only the path and first group is printed in console.
-icacls "C:\Program Files\*" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos %username%"
-icacls "C:\Program Files (x86)\*" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\Program Files" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\Program Files\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\Program Files (x86)" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\Program Files (x86)\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\ProgramData" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "C:\ProgramData\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "%windir%\System32" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "%windir%\System32\*" 2>nul | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+icacls "%windir%\TEMP" 2>nul | findstr /i "(F) (M) (W) (RX) (R) :\" | findstr /i ":\ everyone authenticated users todos %username%"
+echo.
+echo [i] PATH variable entries permissions - place binary or DLL to execute instead of legitimate
+for %%A in ("%path:;=";"%") do ( cmd.exe /c icacls "%%~A" | findstr /i "(F) (M) (W) :\" | findstr /i ":\ everyone authenticated users todos %username%" )
 echo.
 echo.
 echo.
@@ -244,16 +292,37 @@ dir /s/b /A -D sysprep.inf == sysprep.xml == unattend.xml == unattended.xml == *
 cd inetpub 2>nul && (dir /s/b web.config == *.log & cd ..)
 reg query HKCU\Software\ORL\WinVNC3\Password 2>nul
 reg query HKEY_LOCAL_MACHINE\SOFTWARE\RealVNC\WinVNC4 /v password 2>NUL
-reg query HKEY_LOCAL_MACHINE\SOFTWARE\RealVNC\WinVNC4 /v password 2>NUL
 reg query HKLM\SYSTEM\Microsoft\Windows NT\Currentversion\WinLogon 2>nul
 reg query HKLM\SYSTEM\CurrentControlSet\Services\SNMP /s 2>nul
 reg query HKCU\Software\TightVNC\Server 2>nul
 reg query HKCU\Software\SimonTatham\PuTTY\Sessions /s 2>nul
 echo.
 echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES THAT CONTAINS THE WORD PASSWORD WITH EXTENSION: .xml .ini .txt ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-findstr /S/N/M /D:C:\ /si password *.xml *.ini *.txt 2>nul | findstr /v /i "\\AppData\\Local \\WinSxS ApnDatabase.xml \\UEV\\InboxTemplates \\Microsoft.Windows.Cloud \\Notepad\+\+\\ vmware cortana alphabet \\7-zip\\" 2>nul
-echo.
-echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES WHOSE NAME CONTAINS THE WORD PASS CRED or .config not inside \Windows\ ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-dir /s /b *pass* == *cred* == *.config* 2>nul | findstr /v /i "\\windows\\"
+
+if "%long%" == "yes" (
+    echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] REGISTRY WITH STRING pass OR pwd ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+	reg query HKLM /f pass /t REG_SZ /s
+	reg query HKCU /f pass /t REG_SZ /s
+	reg query HKLM /f pwd /t REG_SZ /s
+	reg query HKCU /f pwd /t REG_SZ /s
+
+	echo.
+	echo.
+	echo [i] Iterating through the drives
+	echo.
+	for /f %%x in ('wmic logicaldisk get name^| more') do (
+		set tdrive=%%x
+		if "!tdrive:~1,2!" == ":" (
+			%%x
+            echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES THAT CONTAINS THE WORD PASSWORD WITH EXTENSION: .xml .ini .txt *.cfg *.config ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+	        findstr /s/n/m/i password *.xml *.ini *.txt *.cfg *.config 2>nul | findstr /v /i "\\AppData\\Local \\WinSxS ApnDatabase.xml \\UEV\\InboxTemplates \\Microsoft.Windows.Cloud \\Notepad\+\+\\ vmware cortana alphabet \\7-zip\\" 2>nul
+            echo.
+            echo.
+            echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FILES WHOSE NAME CONTAINS THE WORD PASS CRED or .config not inside \Windows\ ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+            dir /s/b *pass* == *cred* == *.config* == *.cfg 2>nul | findstr /v /i "\\windows\\"  
+            echo.
+            echo.
+		)
+	)
+	echo.
+)
