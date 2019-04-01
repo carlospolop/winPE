@@ -95,7 +95,7 @@ Here you can see that the privileges of user *NT AUTHORITY\SYSTEM* appears in th
 
 This is the kind of outpuf that you have to look for when usnig the winPE.bat script.
 
-(More info about icacls here)[https://ss64.com/nt/icacls.html]
+[More info about icacls here](https://ss64.com/nt/icacls.html)
 
 # Binaries
 
