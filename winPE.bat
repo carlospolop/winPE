@@ -67,7 +67,7 @@ REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] Registered Anti-Virus(AV) ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
+WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List | more 
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] MOUNTED DISKS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -76,13 +76,13 @@ echo [i] Maybe you find something interesting
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ENVIRONMENT ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-echo [i] Interesting information?"
+echo [i] Interesting information?
 set
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] INSTALLED SOFTWARE ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Some weird software? Check for vulnerabilities in unknow software installed
-wmic product get name | more
+::wmic product get name | more  TOO MUCH OUTPUT
 dir /b "C:\Program Files" "C:\Program Files (x86)" | sort
 reg query HKEY_LOCAL_MACHINE\SOFTWARE
 IF exist C:\Windows\CCM\SCClient.exe echo SCCM is installed (installers are run with SYSTEM privileges, many are vulnerable to DLL Sideloading)
@@ -100,20 +100,17 @@ echo.
 echo [i] Checking file permissions of running processes (File backdooring - maybe the same files start automatically when Administrator logs in)
 for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v "system32"^|find ":"') do (
 	for /f eol^=^"^ delims^=^" %%z in ('echo %%x') do (
-		icacls "%%z" 
-2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users todos %username%" && echo.
+		icacls "%%z" 2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users todos %username%" && echo.
 	)
 )
 echo.
 echo [i] Checking directory permissions of running processes (DLL injection)
-for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v 
-"system32"^|find ":"') do for /f eol^=^"^ delims^=^" %%y in ('echo %%x') do (
-	icacls "%%~dpy\" 2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users 
-todos %username%" && echo.
+for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v "system32"^|find ":"') do for /f eol^=^"^ delims^=^" %%y in ('echo %%x') do (
+	icacls "%%~dpy\" 2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users todos %username%" && echo.
 )
 echo.
 echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] RUN AT STARTUP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] RUN ^AT STARTUP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] Check if you can modify any binary that is going to be executed by admin or if you can impersonate a not found binary
 (autorunsc.exe -m -nobanner -a * -ct /accepteula 2>nul || wmic startup get caption,command 2>nul | more & ^
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run 2>nul & ^
@@ -156,7 +153,7 @@ echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FIREWALL ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_
 Netsh Advfirewall show allprofiles
 echo.
 echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ARP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ^ARP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 arp -A
 echo.
 echo.
@@ -183,7 +180,7 @@ echo [i] Check if you are inside the Administrators froup or if you have enabled
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CURRENT USER ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 net user %username%
-net user %USERNAME% /domain
+net user %USERNAME% /domain 2>nul
 whoami /all
 echo.
 echo.
@@ -227,17 +224,16 @@ accesschk.exe -uwcqv %username% * /accepteula 2>nul
 
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] SERVICE BINARY PERMISSIONS WITH WMIC + ICACLS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-echo [i] Search for (W) or (F) inside a group where you belong to. By default only the path and first group is printed in console.
-for /f "tokens=2 delims='='" %%a in ('wmic service list full ^| findstr /i "pathname" ^|findstr /i /v "system32"') do echo %%a >> %temp%\perm.txt
-for /f eol^=^"^ delims^=^" %%a in (%temp%\perm.txt) do cmd.exe /c icacls "%%a" 2>nul | findstr /i "(F) (M) :\" | findstr /i ":\\ everyone authenticated users todos usuarios %username%" && echo.
-del %temp%\perm.txt
+for /f "tokens=2 delims='='" %%a in ('cmd.exe /c wmic service list full ^| findstr /i "pathname" ^|findstr /i /v "system32"') do (
+    for /f eol^=^"^ delims^=^" %%b in ("%%a") do icacls "%%b" 2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users todos usuarios %username%" && echo.
+)
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] CHECK IF YOU CAN MODIFY ANY SERVICE REGISTRY ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-for /f %%a in ('reg query hklm\system\currentcontrolset\services') do del %temp%\reg.hiv 2>nul & reg save %%a %temp%\reg.hiv 2>nul && reg restore %a %temp%\reg.hiv 2>nul && echo You can modify %%a
+for /f %%a in ('reg query hklm\system\currentcontrolset\services') do del %temp%\reg.hiv >nul 2>&1 & reg save %%a %temp%\reg.hiv >nul 2>&1 && reg restore %%a %temp%\reg.hiv >nul 2>&1 && echo You can modify %%a
 echo.
 echo.
-echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] UNQUOTED SERVICE PATHS" ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] UNQUOTED SERVICE PATHS ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 echo [i] When the path is not quoted (ex: C:\Program files\soft\new folder\exec.exe) Windows will try to execute first 'C:\Progam.exe', then 'C:\Program Files\soft\new.exe' and finally 'C:\Program Files\soft\new folder\exec.exe'. Try to create 'C:\Program Files\soft\new.exe'
 echo [i] The permissions are also checked and filtered using icacls
 for /f "tokens=2" %%n in ('sc query state^= all^| findstr SERVICE_NAME') do (

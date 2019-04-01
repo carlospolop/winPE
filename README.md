@@ -12,7 +12,7 @@ Some of the tests in this script were extracted from **[here](https://github.com
 ### Main checks
 
 - [x] Systeminfo --SO version and patches-- (windows suggester)
-- [x] Common Kernel exploits (2K, XP, 2K3, 2K8, Vista, 7)
+- [x] Common known exploits (2K, XP, 2K3, 2K8, Vista, 7)
 - [x] UAC?? 
 - [x] AV??
 - [x] Mounted disks
