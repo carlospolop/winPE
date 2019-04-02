@@ -150,7 +150,8 @@ netstat -ano
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] FIREWALL ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-Netsh Advfirewall show allprofiles
+netsh firewall show state
+netsh firewall show config
 echo.
 echo.
 echo _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-^> [+] ^ARP ^<_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
