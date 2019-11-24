@@ -1,3 +1,5 @@
+# Deprecated, please find an updated version of this script in https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite
+
 # Windows Privilege Escalation
 
 ## Windows PE using CMD (.bat)
